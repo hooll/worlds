@@ -34,4 +34,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release create "folia26.3-build-${{ github.run_number }}" plugin/build/libs/*.jar --title "Worlds patched build #${{ github.run_number }} (Folia 26.3)" --notes "Unofficial build of TheNextLvl Worlds with Folia 26.3 support (port of the upstream 26.2 module, upstream PR #495 by mechobliterate). For Folia-based 26.3 cores." --prerelease
+        run: |
+          gh release create "folia26.3-build-${{ github.run_number }}" plugin/build/libs/*.jar --title "Worlds patched build #${{ github.run_number }} (Folia 26.3)" --notes "Unofficial build of TheNextLvl Worlds with Folia 26.3 support (port of the upstream 26.2 module, upstream PR #495 by mechobliterate). For Folia-based 26.3 cores." --prerelease
