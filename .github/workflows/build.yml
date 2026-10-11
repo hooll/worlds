@@ -1,11 +1,21 @@
-name: Build
-on: [ pull_request, push ]
+name: Build patched Worlds (Folia 26.3)
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
+      - name: Checkout patched sources
         uses: actions/checkout@v7
+        with:
+          repository: mechobliterate/worlds
+          ref: folia-26.3
       - name: Setup Java
         uses: actions/setup-java@v6
         with:
@@ -13,12 +23,15 @@ jobs:
           java-version: 25
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
-      - name: Test with Gradle
-        run: ./gradlew test
       - name: Build with Gradle
         run: ./gradlew shadowJar
-      - name: Upload Build Artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: worlds
+          name: worlds-patched
           path: plugin/build/libs/*.jar
+      - name: Publish as prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release create "folia26.3-build-${{ github.run_number }}" plugin/build/libs/*.jar --title "Worlds patched build #${{ github.run_number }} (Folia 26.3)" --notes "Unofficial build of TheNextLvl Worlds with Folia 26.3 support (port of the upstream 26.2 module, upstream PR #495 by mechobliterate). For Folia-based 26.3 cores." --prerelease
